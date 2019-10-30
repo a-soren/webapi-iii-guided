@@ -1,9 +1,10 @@
 const express = require('express'); // importing a CommonJS module
-
+const helmet = require('helmet');
 const hubsRouter = require('./hubs/hubs-router.js');
 
 const server = express();
 
+server.use(helmet());
 server.use(express.json());
 
 server.use('/api/hubs', hubsRouter);
@@ -16,5 +17,9 @@ server.get('/', (req, res) => {
     <p>Welcome${nameInsert} to the Lambda Hubs API</p>
     `);
 });
+
+server.get('/', (req, res, next)=>{
+  res.send(req.baseUrl);
+})
 
 module.exports = server;
