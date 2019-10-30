@@ -1,12 +1,14 @@
 const express = require('express'); // importing a CommonJS module
 const helmet = require('helmet');
+const morgan=require('morgan');
 const hubsRouter = require('./hubs/hubs-router.js');
 
 const server = express();
 
 server.use(helmet());
 server.use(express.json());
-
+server.use(morgan('dev'));
+server.use(logger);
 server.use('/api/hubs', hubsRouter);
 
 server.get('/', (req, res) => {
@@ -18,8 +20,10 @@ server.get('/', (req, res) => {
     `);
 });
 
-server.get('/', (req, res, next)=>{
-  res.send(req.baseUrl);
-})
+function logger(req, res, next){
+  console.log(`The Logger: [${new Date().toISOString()}]${req.method} to ${req.url}`)
+
+  next();
+}
 
 module.exports = server;
